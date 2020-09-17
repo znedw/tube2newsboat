@@ -2,6 +2,12 @@ const fastify = require('fastify')({ logger: true })
 const fs = require('fs').promises
 require('dotenv').config()
 
+fastify.get('/healthz', async (request, reply) => {
+  return {
+    status: 'ok'
+  }
+})
+
 fastify.put('/sub/add', async (request, reply) => {
   const { channelId } = request.body
   if (channelId) {
@@ -14,14 +20,16 @@ fastify.put('/sub/add', async (request, reply) => {
   }
 })
 
-const newsboatUrlFile = () => process.env.NEWSBOAT_URL_FILE || `${require('os').homedir()}/.newsboat/urls`
+const newsboatUrlFile = () =>
+  process.env.NEWSBOAT_URL_FILE || `${require('os').homedir()}/.newsboat/urls`
 
-const buildSubUrl = (channelId) => `\nhttps://www.youtube.com/feeds/videos.xml?channel_id=${channelId.trim()}\n`
+const buildSubUrl = (channelId) =>
+  `\nhttps://www.youtube.com/feeds/videos.xml?channel_id=${channelId.trim()}\n`
 
 // Run the server!
 const start = async () => {
   try {
-    await fastify.listen(3000)
+    await fastify.listen(3000, '0.0.0.0')
     fastify.log.info(`server listening on ${fastify.server.address().port}`)
     fastify.log.info(`url config file is ${newsboatUrlFile()}`)
   } catch (err) {

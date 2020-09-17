@@ -15,3 +15,5 @@ click `add to newsboat`
 profit
 
 🤟
+
+u can run in docker, see docker-compose.yml for example!!!
